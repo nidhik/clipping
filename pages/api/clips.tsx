@@ -25,7 +25,8 @@ async function createAssetClip ({ playbackId, startTime, endTime }) {
       headers,
       responseType: 'json',
     });
-    return newAssetResp.body.data;
+    let newAssetResponseBody:any = newAssetResp.body
+    return newAssetResponseBody.data;
   } else {
     throw new Error('Not an asset playback ID, not clipping this');
   }
