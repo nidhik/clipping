@@ -8,8 +8,9 @@ async function createAssetClip ({ playbackId, startTime, endTime }) {
   };
   const playbackResp = await got.get(`https://api.mux.com/video/v1/playback-ids/${playbackId}`, { headers, responseType: 'json' });
 
-  if (playbackResp.body?.data?.object?.type === 'asset') {
-    const assetId = playbackResp.body.data.object.id;
+  let responseBody:any = playbackResp.body;
+  if (responseBody?.data?.object?.type === 'asset') {
+    const assetId = responseBody?.data.object.id;
     const newAssetResp = await got.post(`https://api.mux.com/video/v1/assets`, {
       json: {
         input: [
