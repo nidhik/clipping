@@ -48,6 +48,7 @@ export default async function muxWebhookHandler (req: NextApiRequest, res: NextA
         res.json({ message: 'thanks Mux' });
         return;
       }
+      res.json({ message: 'thanks Mux, I notified myself about this' });
       break;
     } default:
       res.setHeader('Allow', ['POST']);
