@@ -1,8 +1,10 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import Mux from '@mux/mux-node';
 import { buffer } from 'micro';
+import faunadb, { query as q } from 'faunadb';
 
-const webhookSignatureSecret = process.env.MUX_WEBHOOK_SIGNATURE_SECRET;
+const { MUX_WEBHOOK_SIGNATURE_SECRET: webhookSignatureSecret, FAUNADB_SECRET: faunadbSecret } = process.env;
+
 
 const verifyWebhookSignature = (rawBody: string | Buffer, req: NextApiRequest) => {
   if (webhookSignatureSecret) {
@@ -13,6 +15,25 @@ const verifyWebhookSignature = (rawBody: string | Buffer, req: NextApiRequest) =
   return true;
 };
 
+const getDBClient = () : faunadb.Client => {
+    if (faunadbSecret) {
+        return new faunadb.Client({ secret: faunadbSecret });
+    }
+    console.log('Missing secret to connect to FaunaDB');
+}
+
+const markAssetReady = (assetId: string, playbackId: string): Promise<void> => {
+    let client = getDBClient()
+    if (!client) {
+        return Promise.reject('Failed to connect to dB');
+    }
+    return client.query(
+        q.Create(
+          q.Collection('clips'),
+          { data: { assetId: assetId, playbackId: playbackId, status: 'ready' } }
+        )
+      )
+}
 //
 // By default, NextJS will look at the content type and intelligently parse the body
 // This is great. Except that for webhooks we need access to the raw body if we want
@@ -48,7 +69,16 @@ export default async function muxWebhookHandler (req: NextApiRequest, res: NextA
         res.json({ message: 'thanks Mux' });
         return;
       }
-      res.json({ message: 'thanks Mux, I notified myself about this' });
+      try {
+        await markAssetReady(
+            data.id,
+            data.playback_ids && data.playback_ids[0] && data.playback_ids[0].id
+        );
+        res.json({ message: 'thanks Mux, I notified myself about this' });
+      } catch (e) {
+        res.statusCode = 500;
+        res.json({ error: 'Error saving clip' });
+      }
       break;
     } default:
       res.setHeader('Allow', ['POST']);
