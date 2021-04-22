@@ -28,6 +28,7 @@ export default async (req: NextApiRequest, res: NextApiResponse): Promise<void> 
         let clip = await getClip(assetId);
         res.json(clip);
       } catch (e) {
+        console.log(assetId)
           console.log(e)
         res.statusCode = 500;
         res.json({ error: 'Error getting clip' });
