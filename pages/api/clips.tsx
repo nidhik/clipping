@@ -21,6 +21,7 @@ async function createAssetClip ({ playbackId, startTime, endTime }) {
           }
         ],
         playback_policy: 'public',
+        mp4_support: 'standard',
       },
       headers,
       responseType: 'json',
