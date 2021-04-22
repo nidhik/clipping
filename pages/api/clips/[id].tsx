@@ -23,12 +23,12 @@ const getClip = (assetId: string | string[]): Promise<void> => {
 }
 
 export default async (req: NextApiRequest, res: NextApiResponse): Promise<void> => {
-    const { assetId } = req.query
+    const { id } = req.query
     try {
-        let clip = await getClip(assetId);
+        let clip = await getClip(id);
         res.json(clip);
       } catch (e) {
-        console.log(assetId)
+        console.log(id)
           console.log(e)
         res.statusCode = 500;
         res.json({ error: 'Error getting clip' });
