@@ -17,7 +17,7 @@ const getClip = (assetId: string | string[]): Promise<void> => {
     }
     return client.query(
         q.Get(
-          q.Match(q.Index('clips_by_asset_id'), assetId)
+          q.Match(q.Index('index_asset_id'), assetId)
         )
       )
 }
@@ -28,6 +28,7 @@ export default async (req: NextApiRequest, res: NextApiResponse): Promise<void> 
         let clip = await getClip(assetId);
         res.json(clip);
       } catch (e) {
+          console.log(e)
         res.statusCode = 500;
         res.json({ error: 'Error getting clip' });
       }
