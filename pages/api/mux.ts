@@ -83,6 +83,7 @@ export default async function muxWebhookHandler (req: NextApiRequest, res: NextA
         res.json({ message: 'thanks Mux, I notified myself about this' });
       } catch (e) {
         res.statusCode = 500;
+        console.log(e)
         res.json({ error: 'Error saving clip' });
       }
       break;
