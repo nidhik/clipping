@@ -16,7 +16,9 @@ const getClip = (assetId: string | string[]): Promise<void> => {
         return Promise.reject('Failed to connect to dB');
     }
     return client.query(
-        q.Get(q.Ref(q.Collection('clips'), assetId))
+        q.Get(
+          q.Match(q.Index('index_asset_id'), assetId)
+        )
       )
 }
 

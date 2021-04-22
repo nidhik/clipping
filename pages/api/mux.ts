@@ -29,8 +29,9 @@ const markAssetReady = (assetId: string, playbackId: string, staticRenditions: a
     }
     return client.query(
         q.Create(
-            q.Ref(q.Collection('clips'), assetId),
+          q.Collection('clips'),
           { data: { 
+              assetId: assetId, 
               playbackId: playbackId, 
               status: 'ready' , 
               staticRenditions: staticRenditions, 
