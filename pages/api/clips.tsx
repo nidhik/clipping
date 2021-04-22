@@ -76,7 +76,7 @@ export default async (req: NextApiRequest, res: NextApiResponse): Promise<void> 
         } else {
           asset = await clip({ assetId, startTime, endTime });
         }
-        res.json({ id: asset.id });
+        res.json({ id: asset.id, playbackId: asset.playback_ids && asset.playback_ids[0] && asset.playback_ids[0].id });
       } catch (e) {
         if (e.response && e.response.body) {
           res.status(400).json(e.response.body);
