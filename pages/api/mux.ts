@@ -22,7 +22,7 @@ const getDBClient = () : faunadb.Client => {
     console.log('Missing secret to connect to FaunaDB');
 }
 
-const markAssetReady = (assetId: string, playbackId: string, static_renditions: any, source_asset_id: string): Promise<void> => {
+const markAssetReady = (assetId: string, playbackId: string, staticRenditions: any, sourceAssetId: string): Promise<void> => {
     let client = getDBClient()
     if (!client) {
         return Promise.reject('Failed to connect to dB');
@@ -34,8 +34,8 @@ const markAssetReady = (assetId: string, playbackId: string, static_renditions: 
               assetId: assetId, 
               playbackId: playbackId, 
               status: 'ready' , 
-              static_renditions: static_renditions, 
-              source_asset_id: source_asset_id} }
+              staticRenditions: staticRenditions, 
+              sourceAssetId: sourceAssetId} }
         )
       )
 }
