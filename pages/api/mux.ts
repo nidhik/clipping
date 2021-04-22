@@ -22,7 +22,7 @@ const getDBClient = () : faunadb.Client => {
     console.log('Missing secret to connect to FaunaDB');
 }
 
-const markAssetReady = (assetId: string, playbackId: string, static_renditions: any): Promise<void> => {
+const markAssetReady = (assetId: string, playbackId: string, static_renditions: any, source_asset_id: string): Promise<void> => {
     let client = getDBClient()
     if (!client) {
         return Promise.reject('Failed to connect to dB');
@@ -30,7 +30,12 @@ const markAssetReady = (assetId: string, playbackId: string, static_renditions: 
     return client.query(
         q.Create(
           q.Collection('clips'),
-          { data: { assetId: assetId, playbackId: playbackId, status: 'ready' , static_renditions: static_renditions} }
+          { data: { 
+              assetId: assetId, 
+              playbackId: playbackId, 
+              status: 'ready' , 
+              static_renditions: static_renditions, 
+              source_asset_id: source_asset_id} }
         )
       )
 }
@@ -73,7 +78,8 @@ export default async function muxWebhookHandler (req: NextApiRequest, res: NextA
         await markAssetReady(
             data.id,
             data.playback_ids && data.playback_ids[0] && data.playback_ids[0].id,
-            data.static_renditions
+            data.static_renditions,
+            data.source_asset_id
         );
         res.json({ message: 'thanks Mux, I notified myself about this' });
       } catch (e) {
