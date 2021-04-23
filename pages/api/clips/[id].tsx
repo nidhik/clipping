@@ -17,7 +17,7 @@ const getClip = (assetId: string | string[]): Promise<void> => {
     }
     return client.query(
         q.Get(
-          q.Match(q.Index('index_source_asset_id'), assetId)
+          q.Paginate(q.Match(q.Index('index_source_asset_id'), assetId))
         )
       )
 }
