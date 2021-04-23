@@ -24,9 +24,6 @@ const getClip = (assetId: string | string[]): Promise<void> => {
           "clip",
           q.Get(q.Var("clip"))
         )
-      //   q.Get(
-      //     q.Paginate(q.Match(q.Index('index_source_asset_id'), assetId))
-      //   )
       )
     )
 }
