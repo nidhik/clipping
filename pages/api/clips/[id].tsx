@@ -16,19 +16,10 @@ const getClip = (assetId: string | string[]): Promise<void> => {
         return Promise.reject('Failed to connect to dB');
     }
     return client.query(
-      q.Map(
-        q.Paginate(
-          q.Match(q.Index("index_source_asset_id"), assetId)
-        ),
-        q.Lambda(
-          "clip",
-          q.Get(q.Var("clip"))
+        q.Get(
+          q.Paginate(q.Match(q.Index('index_source_asset_id'), assetId))
         )
-      //   q.Get(
-      //     q.Paginate(q.Match(q.Index('index_source_asset_id'), assetId))
-      //   )
       )
-    )
 }
 
 export default async (req: NextApiRequest, res: NextApiResponse): Promise<void> => {
