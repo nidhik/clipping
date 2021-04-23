@@ -34,8 +34,8 @@ const getClip = (assetId: string | string[]): Promise<void> => {
 export default async (req: NextApiRequest, res: NextApiResponse): Promise<void> => {
     const { id } = req.query
     try {
-        let clip = await getClip(id);
-        res.json(clip);
+        let clip: any = await getClip(id);
+        res.json(clip.data.pop());
       } catch (e) {
         console.log(id)
           console.log(e)
